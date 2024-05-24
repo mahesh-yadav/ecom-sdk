@@ -66,3 +66,25 @@ def test_sdk_list_stores_authentication_error():
         sdk.list_stores()
 
     assert "Authentication error" in str(exec_info.value)
+
+
+@responses.activate
+def test_sdk_list_products_sort_by_price_desc():
+    store_id = 1
+    responses.add(
+        responses.GET,
+        API_URL + f"/stores/{store_id}/products",
+        status=200,
+        json=[
+            {"id": 1, "price": 100, "name": "Banana"},
+            {"id": 2, "price": 200, "name": "Apple"},
+        ],
+        match=[matchers.header_matcher({"X-API-KEY": API_KEY})]
+    )
+
+    sdk = EcomSDK(API_URL, API_KEY)
+    products = sdk.list_products(store_id, sort_by=EcomSDK.ProductSortBy.PRICE, sort_order=EcomSDK.ProductSortOrder.DESC)
+
+    assert len(products) == 2
+    assert products[0]["id"] == 1
+    assert products[0]["price"] == 100
