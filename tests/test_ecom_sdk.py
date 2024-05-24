@@ -1,4 +1,5 @@
 from ecom_sdk.ecom_sdk import EcomSDK
+from ecom_sdk.models import Product, Store
 import responses
 from responses import matchers
 import requests
@@ -32,8 +33,9 @@ def test_sdk_list_stores():
     stores = sdk.list_stores()
 
     assert len(stores) == 2
-    assert stores[0]["id"] == 1
-    assert stores[0]["name"] == "Lidl"
+    assert stores[0].id == 1
+    assert stores[0].name == "Lidl"
+    assert isinstance(stores[0], Store)
 
 
 @responses.activate
@@ -86,5 +88,7 @@ def test_sdk_list_products_sort_by_price_desc():
     products = sdk.list_products(store_id, sort_by=EcomSDK.ProductSortBy.PRICE, sort_order=EcomSDK.ProductSortOrder.DESC)
 
     assert len(products) == 2
-    assert products[0]["id"] == 1
-    assert products[0]["price"] == 100
+    assert products[0].id == 1
+    assert products[0].price == 100
+    assert products[1].name == "Apple"
+    assert isinstance(products[1], Product)

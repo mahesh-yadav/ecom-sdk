@@ -1,5 +1,6 @@
 import requests
 from enum import Enum
+from .models import Product, Store
 
 
 HTTP_REQUEST_TIMEOUT = 10
@@ -20,7 +21,7 @@ class EcomSDK:
         self._api_url = api_url
         self._api_key = api_key
 
-    def list_stores(self):
+    def list_stores(self) -> list[Store]:
         try:
             response = requests.get(
                 self._api_url + "/stores",
@@ -36,9 +37,9 @@ class EcomSDK:
             else:
                 raise
 
-        return response.json()
+        return [Store(**store) for store in response.json()]
     
-    def list_products(self, store_id, sort_by=ProductSortBy.PRICE, sort_order=ProductSortOrder.ASC):
+    def list_products(self, store_id, sort_by=ProductSortBy.PRICE, sort_order=ProductSortOrder.ASC) -> list[Product]:
         try:
             response = requests.get(
                 self._api_url + f"/stores/{store_id}/products",
@@ -55,4 +56,4 @@ class EcomSDK:
             else:
                 raise
 
-        return response.json()
+        return [Product(**product) for product in response.json()]
