@@ -1,6 +1,8 @@
 from ecom_sdk.ecom_sdk import EcomSDK
 import responses
 from responses import matchers
+import requests
+import pytest
 
 
 API_URL = "https://api.example.com"
@@ -32,3 +34,35 @@ def test_sdk_list_stores():
     assert len(stores) == 2
     assert stores[0]["id"] == 1
     assert stores[0]["name"] == "Lidl"
+
+
+@responses.activate
+def test_sdk_list_stores_connection_error():
+    responses.add(
+        responses.GET,
+        API_URL + "/stores",
+        body=requests.exceptions.ConnectionError(),
+    )
+
+    sdk = EcomSDK(API_URL, API_KEY)
+
+    with pytest.raises(ValueError) as exec_info:
+        sdk.list_stores()
+
+    assert "Connection error" in str(exec_info.value)
+
+
+@responses.activate
+def test_sdk_list_stores_authentication_error():
+    responses.add(
+        responses.GET,
+        API_URL + "/stores",
+        status=403,
+    )
+
+    sdk = EcomSDK(API_URL, API_KEY)
+
+    with pytest.raises(ValueError) as exec_info:
+        sdk.list_stores()
+
+    assert "Authentication error" in str(exec_info.value)
