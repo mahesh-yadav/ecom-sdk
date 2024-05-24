@@ -6,9 +6,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u"ecom_sdk"
-copyright = u"2024, Mahesh Yadav"
-author = u"Mahesh Yadav"
+project = "ecom_sdk"
+copyright = "2024, Mahesh Yadav"
+author = "Mahesh Yadav"
 
 # -- General configuration ---------------------------------------------------
 

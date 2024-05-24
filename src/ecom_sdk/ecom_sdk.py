@@ -7,11 +7,9 @@ HTTP_REQUEST_TIMEOUT = 10
 
 
 class EcomSDK:
-
     class ProductSortBy(str, Enum):
         PRICE = "price"
         Quantity = "quantity"
-
 
     class ProductSortOrder(str, Enum):
         DESC = "desc"
@@ -20,7 +18,6 @@ class EcomSDK:
     def __init__(self, config: EcomAPIConfig) -> None:
         self._api_url = config.api_url
         self._api_key = config.api_key
-        
 
     def list_stores(self) -> list[Store]:
         try:
@@ -31,16 +28,22 @@ class EcomSDK:
             )
             response.raise_for_status()
         except requests.exceptions.ConnectionError as e:
-            raise ValueError("Connection error, check `EcomSDK._api_url` is set correctly") from e
+            raise ValueError(
+                "Connection error, check `EcomSDK._api_url` is set correctly"
+            ) from e
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 403:
-                raise ValueError("Authentication error, check `EcomSDK._api_key` is set correctly") from e
+                raise ValueError(
+                    "Authentication error, check `EcomSDK._api_key` is set correctly"
+                ) from e
             else:
                 raise
 
         return [Store(**store) for store in response.json()]
-    
-    def list_products(self, store_id, sort_by=ProductSortBy.PRICE, sort_order=ProductSortOrder.ASC) -> list[Product]:
+
+    def list_products(
+        self, store_id, sort_by=ProductSortBy.PRICE, sort_order=ProductSortOrder.ASC
+    ) -> list[Product]:
         try:
             response = requests.get(
                 self._api_url + f"/stores/{store_id}/products",
@@ -50,10 +53,14 @@ class EcomSDK:
             )
             response.raise_for_status()
         except requests.exceptions.ConnectionError as e:
-            raise ValueError("Connection error, check `EcomSDK._api_url` is set correctly") from e
+            raise ValueError(
+                "Connection error, check `EcomSDK._api_url` is set correctly"
+            ) from e
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 403:
-                raise ValueError("Authentication error, check `EcomSDK._api_key` is set correctly") from e
+                raise ValueError(
+                    "Authentication error, check `EcomSDK._api_key` is set correctly"
+                ) from e
             else:
                 raise
 

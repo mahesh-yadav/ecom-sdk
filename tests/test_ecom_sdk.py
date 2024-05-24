@@ -82,11 +82,15 @@ def test_sdk_list_products_sort_by_price_desc(ecom_sdk_config):
             {"id": 1, "price": 100, "name": "Banana"},
             {"id": 2, "price": 200, "name": "Apple"},
         ],
-        match=[matchers.header_matcher({"X-API-KEY": ecom_sdk_config.api_key})]
+        match=[matchers.header_matcher({"X-API-KEY": ecom_sdk_config.api_key})],
     )
 
     sdk = EcomSDK(ecom_sdk_config)
-    products = sdk.list_products(store_id, sort_by=EcomSDK.ProductSortBy.PRICE, sort_order=EcomSDK.ProductSortOrder.DESC)
+    products = sdk.list_products(
+        store_id,
+        sort_by=EcomSDK.ProductSortBy.PRICE,
+        sort_order=EcomSDK.ProductSortOrder.DESC,
+    )
 
     assert len(products) == 2
     assert products[0].id == 1
