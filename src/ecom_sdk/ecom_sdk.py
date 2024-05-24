@@ -1,6 +1,6 @@
 import requests
 from enum import Enum
-from .models import Product, Store
+from .models import Product, Store, EcomAPIConfig
 
 
 HTTP_REQUEST_TIMEOUT = 10
@@ -17,9 +17,10 @@ class EcomSDK:
         DESC = "desc"
         ASC = "asc"
 
-    def __init__(self, api_url, api_key):
-        self._api_url = api_url
-        self._api_key = api_key
+    def __init__(self, config: EcomAPIConfig) -> None:
+        self._api_url = config.api_url
+        self._api_key = config.api_key
+        
 
     def list_stores(self) -> list[Store]:
         try:
